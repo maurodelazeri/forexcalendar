@@ -1,5 +1,5 @@
 #!/usr/bin/env node
- // Mauro Delazeri
+// Mauro Delazeri
 // maurodelazeri@gmail.com
 // https://www.hitback.us
 
@@ -20,7 +20,6 @@ if ((process.argv[2] === undefined) || (process.argv[3] === undefined)) {
 
 if (isDate(dateRef)) {
     if (isDate(dateEnd)) {
-
         asyncLoop(daysBetween(dateRef, dateEnd), function(loop) {
                 var date = new Date(dateEnd);
                 var dd = date.setDate(date.getDate() - loop.iteration());
@@ -157,14 +156,14 @@ function getEvents(time, datasent, callback) {
                        forecast: forecast,
                        previous: previous
                    };
-
             	   console.log(JSON.stringify(calendar_json));
 		}
 
             });
-
             callback();
-
-        }
+        }else{
+	   console.log("error on the request");  
+           callback();
+	}
     });
 }
