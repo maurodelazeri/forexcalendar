@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Mauro Delazeri
+ // Mauro Delazeri
 // maurodelazeri@gmail.com
 // https://www.hitback.us
 
@@ -9,35 +9,36 @@ var dateFormat = require('dateformat');
 var fs = require('fs');
 
 var monthNames = ["jan", "fev", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
-var dateRef = process.argv[2];
-var dateEnd = process.argv[3];
+var dateRef  = process.argv[2];
+var dateEnd  = process.argv[3];
+var viewJson = process.argv[4];
 
-if ( (process.argv[2] === undefined ) ||  (process.argv[3] === undefined ) ) {
-   console.log("Please specify the parameters of inicial and final date: \nnode calendar.js yyyy-mm-dd yyy-mm-dd");
-   return;
+if ((process.argv[2] === undefined) || (process.argv[3] === undefined)) {
+    console.log("Please specify the parameters of inicial and final date: \nnode calendar.js yyyy-mm-dd yyy-mm-dd \nor\nnode calendar.js yyyy-mm-dd yyy-mm-dd json");
+    return;
 }
 
-if (isDate(dateRef)) {		
-if (isDate(dateEnd)) {		
+if (isDate(dateRef)) {
+    if (isDate(dateEnd)) {
 
-asyncLoop(daysBetween(dateRef,dateEnd), function(loop) {
-            var date = new Date(dateEnd);
-            var dd = date.setDate(date.getDate() - loop.iteration());
-            var datasent = dateFormat(new Date(dd), "yyyy") + "-" + dateFormat(new Date(dd), "mm") + "-" + dateFormat(new Date(dd), "dd");
-            getEvents(monthNames[dateFormat(new Date(dd), "m") - 1] + dateFormat(new Date(dd), "d") + "." + dateFormat(new Date(dd), "yyyy"), datasent, function(result) {
-            loop.next();
-        })
-    },
+        asyncLoop(daysBetween(dateRef, dateEnd), function(loop) {
+                var date = new Date(dateEnd);
+                var dd = date.setDate(date.getDate() - loop.iteration());
+                var datasent = dateFormat(new Date(dd), "yyyy") + "-" + dateFormat(new Date(dd), "mm") + "-" + dateFormat(new Date(dd), "dd");
+                getEvents(monthNames[dateFormat(new Date(dd), "m") - 1] + dateFormat(new Date(dd), "d") + "." + dateFormat(new Date(dd), "yyyy"), datasent, function(result) {
+                    loop.next();
+                })
+            },
 
-    function() {
-        console.log('cycle ended')
+            function() {
+                console.log('cycle ended')
+            }
+        );
+    } else {
+        console.log("Invalid Date");
     }
-);
-}else{
-  console.log("Invalid Date");
-}
-}else{
-  console.log("Invalid Date");
+} else {
+    console.log("Invalid Date");
 }
 
 function asyncLoop(iterations, func, callback) {
@@ -72,7 +73,7 @@ function asyncLoop(iterations, func, callback) {
     return loop;
 }
 
-function isDate (date) {
+function isDate(date) {
     return (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
 }
 
@@ -87,7 +88,7 @@ function treatAsUTC(date) {
     return result;
 }
 
-function trim_space (str) {
+function trim_space(str) {
     str = str.replace(/^\s+/, '');
     for (var i = str.length - 1; i >= 0; i--) {
         if (/\S/.test(str.charAt(i))) {
@@ -109,9 +110,9 @@ function convertTo24Hour(time) {
     return time.replace(/(am|pm)/, '');
 }
 
-function saveLog (text) {
-    var file =  "result.sql";
-    fs.appendFile(file, text, function (err) {
+function saveLog(text) {
+    var file = "result.sql";
+    fs.appendFile(file, text, function(err) {
         if (err) return console.log(err);
         console.log('successfully appended "' + text + '"');
     });
@@ -122,10 +123,10 @@ function getEvents(time, datasent, callback) {
         if (!error) {
             var $ = cheerio.load(html);
             var title, release, rating;
-            var json = {};
+            var calendar_json = {};
             var time = "";
-	    var calendar_time = "";
-
+            var calendar_time = "";
+        
             $('.calendar__table .calendar__row--grey').filter(function() {
                 var data = $(this);
 
@@ -143,12 +144,23 @@ function getEvents(time, datasent, callback) {
                 var previous = data.find('.calendar__previous').text();
                 var calendar_date = datasent;
 
+		if (process.argv[4] === undefined) {
+                    insert = "INSERT INTO calendar (\"date\",\"time\",\"symbol\",\"title\",\"actual\",\"forecast\",\"previous\") VALUES (\"" + calendar_date + "\", \"" + calendar_time + "\", \"" + currency + "\", \"" + title + "\", \"" + actual + "\", \"" + forecast + "\", \"" + previous + "\" )\n";
+                   saveLog(insert);
+		}else{
+                   calendar_json = {
+                       date: calendar_date,
+                       time: calendar_time,
+                       symbol: currency,
+                       title: title,
+                       actual: actual,
+                       forecast: forecast,
+                       previous: previous
+                   };
 
-		insert = "INSERT INTO calendar (\"date\",\"time\",\"symbol\",\"title\",\"actual\",\"forecast\",\"previous\") VALUES (\""+calendar_date+"\", \""+calendar_time+"\", \""+currency+"\", \""+title+"\", \""+actual+"\", \""+forecast+"\", \""+previous+"\" )\n";
+            	   console.log(JSON.stringify(calendar_json));
+		}
 
-		saveLog(insert);
-
-                  // console.log(JSON.stringify(json));
             });
 
             callback();
