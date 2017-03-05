@@ -1,6 +1,12 @@
 # forexcalendar
 Economic Calendar scraper for forexfactory (https://www.forexfactory.com)
 
-npm install
+**npm install**
 
-node news.js
+**for saving in sql file**
+
+node calendar.js yyyy-mm-dd yyy-mm-dd 
+
+**json in screen**
+
+node calendar.js yyyy-mm-dd yyy-mm-dd json
