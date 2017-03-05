@@ -1,0 +1,22 @@
+{
+  "name": "forexcalendar",
+  "version": "1.0.0",
+  "description": "Nodejs scraper for forexfactory",
+  "main": "news.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maurodelazeri/forexcalendar.git"
+  },
+  "author": "maurodelazeri@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maurodelazeri/forexcalendar/issues"
+  },
+  "homepage": "https://github.com/maurodelazeri/forexcalendar#readme",
+  "keywords": [
+    "forex"
+  ]
+}
