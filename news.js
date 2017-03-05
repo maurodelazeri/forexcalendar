@@ -9,7 +9,6 @@ var cheerio = require('cheerio');
 request("https://www.forexfactory.com/calendar.php?day=jan9.2017", function (error, response, html) {
     if (!error) {
         var $ = cheerio.load(html);
-        var title, release, rating;
         var json = {};
 	var time = "";
 
