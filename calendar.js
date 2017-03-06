@@ -126,7 +126,7 @@ function getEvents(time, datasent, callback) {
             var time = "";
             var calendar_time = "";
         
-            $('.calendar__table .calendar__row--grey').filter(function() {
+            $('.calendar__row').filter(function() {
                 var data = $(this);
 
                 if (data.find('.calendar__time').text() == "") {
