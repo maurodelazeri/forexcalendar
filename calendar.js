@@ -144,8 +144,10 @@ function getEvents(time, datasent, callback) {
                 var calendar_date = datasent;
 
 		if (process.argv[4] === undefined) {
-                    insert = "INSERT INTO calendar (\"date\",\"time\",\"symbol\",\"title\",\"actual\",\"forecast\",\"previous\") VALUES (\"" + calendar_date + "\", \"" + calendar_time + "\", \"" + currency + "\", \"" + title + "\", \"" + actual + "\", \"" + forecast + "\", \"" + previous + "\" )\n";
-                   saveLog(insert);
+		    if (currency.length > 2) {
+                    	insert = "INSERT INTO calendar (\"date\",\"time\",\"symbol\",\"title\",\"actual\",\"forecast\",\"previous\") VALUES (\"" + calendar_date + "\", \"" + calendar_time + "\", \"" + currency + "\", \"" + title + "\", \"" + actual + "\", \"" + forecast + "\", \"" + previous + "\" )\n";
+                   	saveLog(insert);
+		   }	
 		}else{
                    calendar_json = {
                        date: calendar_date,
@@ -156,7 +158,10 @@ function getEvents(time, datasent, callback) {
                        forecast: forecast,
                        previous: previous
                    };
-            	   console.log(JSON.stringify(calendar_json));
+
+		   if (calendar_json.symbol.length > 2) {
+            	     console.log(JSON.stringify(calendar_json));
+		   } 	
 		}
 
             });
