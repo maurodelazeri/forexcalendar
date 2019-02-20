@@ -8,7 +8,7 @@ var cheerio = require('cheerio');
 var dateFormat = require('dateformat');
 var fs = require('fs');
 
-var monthNames = ["jan", "fev", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+var monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 var dateRef  = process.argv[2];
 var dateEnd  = process.argv[3];
 var viewJson = process.argv[4];
